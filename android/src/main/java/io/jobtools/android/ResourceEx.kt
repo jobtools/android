@@ -2,7 +2,7 @@ package io.jobtools.android
 
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.text.Html
 import android.text.Spanned
 import android.util.TypedValue

@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.view.*
 import android.widget.Toast
 import java.lang.ref.WeakReference
