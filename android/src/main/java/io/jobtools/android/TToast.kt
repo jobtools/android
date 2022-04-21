@@ -2,17 +2,12 @@ package io.jobtools.android
 
 import android.app.Activity
 import android.app.Application
-import android.app.Service
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.view.*
-import android.widget.TextView
 import android.widget.Toast
-import org.intellij.lang.annotations.JdkConstants
 import java.lang.ref.WeakReference
 
 
@@ -23,68 +18,9 @@ import java.lang.ref.WeakReference
 
 class TToast : Toast(context) {
 
-    init {
-        if (useCustomView()) {
-            initCustomView()
-        }
-    }
-
-    private fun initCustomView() {
-        val view = (context.getSystemService(Service.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
-                .inflate(idLayoutRes!!, null)
-
-        setGravity(Gravity.FILL_HORIZONTAL.or(Gravity.BOTTOM), 0, 100.dpToPixels())
-
-        val params = WindowManager.LayoutParams()
-        params.width = WindowManager.LayoutParams.MATCH_PARENT
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT
-        view.layoutParams = params
-
-        setView(view)
-    }
-
-    override fun setText(s: CharSequence) {
-        if (useCustomView()) {
-            val textView = view.findViewById(idTextView!!) as TextView
-            textView.text = s
-        } else {
-            super.setText(s)
-        }
-    }
-
     companion object {
 
-        // custom view 사용시, 활성화 시키기
-        @LayoutRes
-        private var idLayoutRes: Int? = null//R.layout.view_toast
-        @IdRes
-        private var idTextView: Int? = null//R.id.text_message
-
-        fun setCustomView(@LayoutRes idLayoutRes:Int, @IdRes idTextView:Int) {
-            Companion.idLayoutRes = idLayoutRes
-            Companion.idTextView = idTextView
-        }
-
-        fun unSetCustomView() {
-            idLayoutRes = null
-            idTextView = null
-        }
-
-        private fun useCustomView() = idLayoutRes != null && idTextView != null
-
         private var lastToast: WeakReference<Toast>? = null
-        private var textSize:Float? = null
-
-        @JvmStatic
-        fun setTextSize(textSize:Float?) {
-            Companion.textSize = textSize
-        }
-
-        @JvmStatic
-        fun setFontFamily(font:JdkConstants.FontStyle) {
-            textSize =
-                textSize
-        }
 
         /**
          * Make a custom toast that just contains a text view.
@@ -107,23 +43,8 @@ class TToast : Toast(context) {
             return toast
         }
 
-        private fun createToast(context: Context, text: CharSequence, duration: Int): Toast {
-            if (useCustomView()) {
-                val toast = TToast()
-                toast.setText(text)
-                toast.duration = duration
-
-                return toast
-            }
-
-            val toast = Toast.makeText(context, text, duration)
-            val group = toast.view as ViewGroup
-            val messageTextView = group.getChildAt(0) as TextView
-            textSize?.let {
-                messageTextView.textSize = it
-            }
-            return toast
-        }
+        private fun createToast(context: Context, text: CharSequence, duration: Int): Toast =
+            Toast.makeText(context, text, duration)
 
         private val context: Context
             get() {
@@ -211,7 +132,7 @@ class TToast : Toast(context) {
         @JvmStatic
         fun show(context: Context, text: CharSequence, duration: Int) {
             Handler(Looper.getMainLooper())
-                .post{
+                .post {
                     makeText(
                         context,
                         text,
@@ -251,7 +172,7 @@ class TToast : Toast(context) {
         }
 
         var debugEnabled = false
-        
+
         @JvmStatic
         fun debugEnable(enable: Boolean) {
             debugEnabled = enable
